@@ -4,18 +4,19 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	0.7.1
-Release:	5
+Version:	0.8.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
-# Source0-md5:	7c5d22d71935bce0f9287d00440ba1ec
+# Source0-md5:	2268f039e498eaa3f5a0258a94a57e40
 Patch0:		%{name}-no-psql-src.patch
 URL:		http://postgis.refractions.net/
+BuildRequires:	geos-devel
 BuildRequires:	postgresql-backend-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	proj-devel
-Requires:	postgresql = %{pg_version}
+Requires:	postgresql-module-plpgsql = %{pg_version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # oh well... I also don't understand this... ;)
@@ -35,10 +36,12 @@ geograficznych.
 %patch0 -p1
 
 %build
-%{__make} \
+%{__make} all \
+	VERSION=7.4 \
 	USE_PROJ=1 \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags}" \
+	GEOS_DIR="/usr" \
 	libdir="%{_libdir}/postgresql" \
 	shlib="%{name}.so"
 
