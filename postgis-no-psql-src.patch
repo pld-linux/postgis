@@ -1,0 +1,100 @@
+diff -ur postgis-0.7.0/Makefile postgis-0.7.0-/Makefile
+--- postgis-0.7.0/Makefile	Sun May  5 00:47:38 2002
++++ postgis-0.7.0-/Makefile	Mon May  6 20:28:49 2002
+@@ -1,7 +1,7 @@
+ # Configuration Directives
+ #---------------------------------------------------------------
+ # Set USE_PG72 to 1 for PostgreSQL version >= 7.3
+-USE_PG72=0
++USE_PG72=1
+ #---------------------------------------------------------------
+ # Set USE_PROJ to 1 for Proj4 reprojection support
+ USE_PROJ=0
+@@ -13,15 +13,17 @@
+ # Default the root of the PostgreSQL source tree 
+ # To use a non-standard location set the PGSQL_SRC environment
+ # variable to the appropriate location.
+-ifeq (${PGSQL_SRC},) 
+-	top_builddir = ../..
+-	include $(top_builddir)/src/Makefile.global
+-	libdir := $(libdir)/contrib
+-else
+-	top_builddir = ${PGSQL_SRC}
+-	include $(top_builddir)/src/Makefile.global
+-	libdir := ${PWD}
+-endif
++#ifeq (${PGSQL_SRC},) 
++#	top_builddir = ../..
++#	include $(top_builddir)/src/Makefile.global
++#	libdir := $(libdir)/contrib
++#else
++#	top_builddir = ${PGSQL_SRC}
++#	include $(top_builddir)/src/Makefile.global
++#	libdir := ${PWD}
++#endif
++
++srcdir = /usr/include/postgresql/server
+ 
+ TEST_DB=geom_regress
+ 
+@@ -58,11 +60,16 @@
+ 
+ all: all-lib $(NAME).sql $(NAME).sql $(NAME)_undef.sql loaderdumper
+ 
++all-lib: $(NAME).so
++
++$(NAME).so: $(OBJS)
++	$(CC) -shared -o $@ $^
++
+ loaderdumper:
+ 	make -C loader
+ 
+ # Shared library stuff
+-include $(top_srcdir)/src/Makefile.shlib
++#include $(top_srcdir)/src/Makefile.shlib
+ 
+ $(NAME).sql: $(NAME).sql.in $(NAME)_gist_72.sql.in $(NAME)_gist.sql.in
+ 	sed -e 's:@MODULE_FILENAME@:$(libdir)/$(shlib):g;s:@POSTGIS_VERSION@:$(SO_MAJOR_VERSION).$(SO_MINOR_VERSION):g' < $(NAME).sql.in > $@ 
+@@ -89,6 +96,9 @@
+ uninstall: uninstall-lib
+ 	@rm -f $(docdir)/contrib/README.$(NAME) $(datadir)/contrib/$(NAME).sql
+ 
++clean-lib:
++	rm -f $(NAME).so
++
+ clean distclean maintainer-clean: clean-lib
+ 	@rm -f $(OBJS) $(NAME).sql $(NAME)_undef.sql
+ 	make -C loader clean
+diff -ur postgis-0.7.0/loader/Makefile postgis-0.7.0-/loader/Makefile
+--- postgis-0.7.0/loader/Makefile	Sat May  4 22:30:17 2002
++++ postgis-0.7.0-/loader/Makefile	Mon May  6 20:27:55 2002
+@@ -4,18 +4,20 @@
+ subdir = contrib/postgis/loader
+ 
+ # Root of the pgsql source tree 
+-ifeq (${PGSQL_SRC},) 
+-	top_builddir = ../../..
+-	include $(top_builddir)/src/Makefile.global
+-	libdir := $(libdir)/contrib
+-else
+-	top_builddir = ${PGSQL_SRC}
+-	include $(top_builddir)/src/Makefile.global
+-	libdir := ${PWD}
+-endif
++#ifeq (${PGSQL_SRC},) 
++#	top_builddir = ../../..
++#	include $(top_builddir)/src/Makefile.global
++#	libdir := $(libdir)/contrib
++#else
++#	top_builddir = ${PGSQL_SRC}
++#	include $(top_builddir)/src/Makefile.global
++#	libdir := ${PWD}
++#endif
+ 
+ OBJS = shpopen.o dbfopen.o getopt.o
+ 
++LIBS = -lpq
++
+ override CPPFLAGS := -g -I$(srcdir) -I$(top_builddir)/src/interfaces/libpq $(CPPFLAGS) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"'
+ 
+ all: shp2pgsql pgsql2shp
