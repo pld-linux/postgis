@@ -9,6 +9,7 @@ Release:	5
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
+# Source0-md5:	7c5d22d71935bce0f9287d00440ba1ec
 Patch0:		%{name}-no-psql-src.patch
 URL:		http://postgis.refractions.net/
 BuildRequires:	postgresql-backend-devel
