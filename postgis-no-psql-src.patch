@@ -30,26 +30,31 @@
  
  all: shp2pgsql$(EXE) pgsql2shp$(EXE)
  
---- postgis-0.8.2/Makefile.orig	2004-05-28 05:03:27.000000000 +0200
-+++ postgis-0.8.2/Makefile	2004-06-06 02:26:06.780112616 +0200
-@@ -33,15 +33,7 @@
+--- postgis-0.9.0/Makefile.orig	2004-09-10 20:42:23.000000000 +0200
++++ postgis-0.9.0/Makefile	2004-11-01 13:14:00.119638384 +0100
+@@ -49,9 +49,7 @@
  # To use a non-standard location set the PGSQL_SRC environment
  # variable to the appropriate location.
  #
 -ifeq (${PGSQL_SRC},) 
--	top_builddir = ../..
--	include $(top_builddir)/src/Makefile.global
--	LPATH := \$$libdir
--else
--	top_builddir = ${PGSQL_SRC}
--	include $(top_builddir)/src/Makefile.global
--	LPATH := ${PWD}
+-	PGSQL_SRC = ../..
 -endif
 +srcdir = /usr/include/postgresql/server
  
  #---------------------------------------------------------------
+ # Path to library (to be specified in CREATE FUNCTION queries)
+@@ -63,10 +61,6 @@
+ endif
+ 
+ #---------------------------------------------------------------
+-top_builddir = ${PGSQL_SRC}
+-include $(top_builddir)/src/Makefile.global
+-
+-#---------------------------------------------------------------
  # Default missing CXX variable to c++
-@@ -94,7 +86,7 @@
+ # 
+ ifeq ($(CXX),) 
+@@ -120,7 +114,7 @@
  
  #---------------------------------------------------------------
  
@@ -57,8 +62,8 @@
 +override CFLAGS += -fPIC -fexceptions 
  override CFLAGS += -I$(srcdir) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"' 
  override CFLAGS += -DUSE_VERSION=$(USE_VERSION)
- 
-@@ -157,12 +149,15 @@
+ override CFLAGS += -DPOSTGIS_LIB_VERSION='"$(POSTGIS_LIB_VERSION)"'
+@@ -186,12 +180,15 @@
  #---------------------------------------------------------------
  # Makefile targets
  
@@ -66,7 +71,7 @@
 -
  postgis_geos_wrapper.o: postgis_geos_wrapper.cpp
  
- all: all-lib postgis.sql postgis_undef.sql loaderdumper
+ all: $(GEOS_RULES) all-lib postgis.sql postgis_undef.sql loaderdumper
  
 +all-lib: $(NAME).so
 +
@@ -76,7 +81,7 @@
  loaderdumper:
  	$(MAKE) -C loader
  
-@@ -205,6 +200,9 @@
+@@ -240,6 +237,9 @@
  uninstall: uninstall-lib
  	@rm -f $(docdir)/contrib/README.postgis $(datadir)/contrib/postgis.sql
  
@@ -84,5 +89,67 @@
 +	rm -f $(NAME).so
 +
  clean distclean maintainer-clean: clean-lib
- 	@rm -f $(OBJS) postgis.sql postgis_undef.sql
+ 	@rm -f $(OBJS) postgis.sql postgis_undef.sql postgis_geos_version.h
  	$(MAKE) -C loader clean
+--- postgis-0.9.0/lwgeom/Makefile.orig	2004-09-07 19:04:03.000000000 +0200
++++ postgis-0.9.0/lwgeom/Makefile	2004-11-01 13:18:00.555086640 +0100
+@@ -31,9 +31,6 @@
+ # To use a non-standard location set the PGSQL_SRC environment
+ # variable to the appropriate location.
+ #
+-ifeq (${PGSQL_SRC},) 
+-	PGSQL_SRC = ../../..
+-endif
+ 
+ #---------------------------------------------------------------
+ # Path to library (to be specified in CREATE FUNCTION queries)
+@@ -45,9 +42,6 @@
+ endif
+ 
+ #---------------------------------------------------------------
+-top_builddir = ${PGSQL_SRC}
+-include $(top_builddir)/src/Makefile.global
+-#---------------------------------------------------------------
+ # Default missing CXX variable to c++
+ # 
+ ifeq ($(CXX),) 
+@@ -101,7 +95,7 @@
+ 
+ #---------------------------------------------------------------
+ 
+-override CFLAGS += -g 
++override CFLAGS += -fPIC
+ 
+ override CFLAGS += -I$(srcdir) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"' 
+ override CFLAGS += -DUSE_VERSION=$(USE_VERSION)
+@@ -154,8 +148,6 @@
+ #---------------------------------------------------------------
+ # Makefile targets
+ 
+-include $(top_srcdir)/src/Makefile.shlib
+-
+ wktparse.tab.c: wktparse.y
+ 	$(YACC) -vd -p lwg_parse_yy wktparse.y
+ 	mv -f y.tab.c wktparse.tab.c
+@@ -169,6 +161,11 @@
+ 
+ all: all-lib lwpostgis.sql
+ 
++all-lib: $(NAME).so
++
++$(NAME).so: $(OBJS)
++	$(CC) -shared -o $@ $^ $(SHLIB_LINK)
++
+ # Shared library stuff
+ 
+ #lwgeom.sql: lwgeom.sql.in
+@@ -205,6 +202,9 @@
+ uninstall: uninstall-lib
+ 	@rm -f $(datadir)/contrib/lwgeom.sql
+ 
++clean-lib:
++	rm -f $(NAME).so
++
+ clean distclean maintainer-clean: clean-lib
+ 	@rm -f $(OBJS) 
+ 	rm -f $(OTHERS)
