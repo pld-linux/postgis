@@ -5,7 +5,7 @@ Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	0.8.2
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
