@@ -8,7 +8,7 @@ Version:	0.7.0
 Release:	1
 License:	GPL
 Group:		Applications/Databases
-Source0:	%{name}-%{version}.tar.gz
+Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
 Patch0:		%{name}-no-psql-src.patch
 Requires:	postgresql = %{pg_version}
 URL:		http://postgis.refractions.net/
