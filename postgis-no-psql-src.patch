@@ -30,8 +30,8 @@
  
  all: shp2pgsql$(EXE) pgsql2shp$(EXE)
  
---- postgis-0.8.1/Makefile.orig	2003-11-20 18:51:43.000000000 +0100
-+++ postgis-0.8.1/Makefile	2004-04-05 22:36:43.371311328 +0200
+--- postgis-0.8.2/Makefile.orig	2004-05-28 05:03:27.000000000 +0200
++++ postgis-0.8.2/Makefile	2004-06-06 02:26:06.780112616 +0200
 @@ -33,15 +33,7 @@
  # To use a non-standard location set the PGSQL_SRC environment
  # variable to the appropriate location.
@@ -39,26 +39,26 @@
 -ifeq (${PGSQL_SRC},) 
 -	top_builddir = ../..
 -	include $(top_builddir)/src/Makefile.global
--	#LPATH := $$libdir
+-	LPATH := \$$libdir
 -else
 -	top_builddir = ${PGSQL_SRC}
 -	include $(top_builddir)/src/Makefile.global
--	#LPATH := ${PWD}
+-	LPATH := ${PWD}
 -endif
 +srcdir = /usr/include/postgresql/server
  
  #---------------------------------------------------------------
  # Default missing CXX variable to c++
-@@ -83,7 +75,7 @@
- endif
+@@ -94,7 +86,7 @@
+ 
  #---------------------------------------------------------------
  
--override CFLAGS += -g -fexceptions  
-+override CFLAGS += -fPIC -fexceptions  
+-override CFLAGS += -g -fexceptions 
++override CFLAGS += -fPIC -fexceptions 
  override CFLAGS += -I$(srcdir) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"' 
  override CFLAGS += -DUSE_VERSION=$(USE_VERSION)
  
-@@ -142,12 +134,15 @@
+@@ -157,12 +149,15 @@
  #---------------------------------------------------------------
  # Makefile targets
  
@@ -66,7 +66,7 @@
 -
  postgis_geos_wrapper.o: postgis_geos_wrapper.cpp
  
- all: all-lib postgis.sql postgis.sql postgis_undef.sql loaderdumper
+ all: all-lib postgis.sql postgis_undef.sql loaderdumper
  
 +all-lib: $(NAME).so
 +
@@ -76,7 +76,7 @@
  loaderdumper:
  	$(MAKE) -C loader
  
-@@ -191,6 +186,9 @@
+@@ -205,6 +200,9 @@
  uninstall: uninstall-lib
  	@rm -f $(docdir)/contrib/README.postgis $(datadir)/contrib/postgis.sql
  
