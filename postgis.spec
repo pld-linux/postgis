@@ -4,16 +4,17 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	0.7.0
+Version:	0.7.1
 Release:	1
 License:	GPL
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
 Patch0:		%{name}-no-psql-src.patch
-Requires:	postgresql = %{pg_version}
 URL:		http://postgis.refractions.net/
 BuildRequires:	postgresql-backend-devel
 BuildRequires:	postgresql-devel
+BuildRequires:	proj-devel
+Requires:	postgresql = %{pg_version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # oh well... I also don't understand this... ;)
@@ -34,6 +35,7 @@ geograficznych.
 
 %build
 %{__make} \
+	USE_PROJ=1 \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags}" \
 	libdir="%{_libdir}/postgresql" \
@@ -49,13 +51,11 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir}}
 
 install %{name}.so $RPM_BUILD_ROOT%{_libdir}/postgresql
 
-gzip -9nf README* CHANGES CREDITS TODO loader/README* *.sql
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz loader/*.gz doc/html examples/wkb_reader
+%doc CHANGES CREDITS README.postgis TODO doc/html examples/wkb_reader loader/README.* *.sql
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/postgresql/%{name}.so

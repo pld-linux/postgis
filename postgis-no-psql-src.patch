@@ -4,7 +4,7 @@ diff -ur postgis-0.7.0/Makefile postgis-0.7.0-/Makefile
 @@ -1,7 +1,7 @@
  # Configuration Directives
  #---------------------------------------------------------------
- # Set USE_PG72 to 1 for PostgreSQL version >= 7.3
+ # Set USE_PG72 to 1 for PostgreSQL version >= 7.2
 -USE_PG72=0
 +USE_PG72=1
  #---------------------------------------------------------------
@@ -44,7 +44,7 @@ diff -ur postgis-0.7.0/Makefile postgis-0.7.0-/Makefile
 +all-lib: $(NAME).so
 +
 +$(NAME).so: $(OBJS)
-+	$(CC) -shared -o $@ $^
++	$(CC) -shared -o $@ $^ $(SHLIB_LINK)
 +
  loaderdumper:
  	make -C loader
