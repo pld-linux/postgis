@@ -4,12 +4,12 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	0.8.1
+Version:	0.8.2
 Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
-# Source0-md5:	2268f039e498eaa3f5a0258a94a57e40
+# Source0-md5:	0a2ed054e7a1ad74153eb844d1b56046
 Patch0:		%{name}-no-psql-src.patch
 URL:		http://postgis.refractions.net/
 BuildRequires:	geos-devel
@@ -60,6 +60,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES CREDITS README.postgis TODO doc/html examples/wkb_reader loader/README.* *.sql
+%doc CHANGES CREDITS README.postgis TODO doc/html examples/wkb_reader *.sql
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/postgresql/%{name}.so
