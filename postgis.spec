@@ -13,6 +13,7 @@ Source0:	http://postgis.refractions.net/%{name}-%{version}.tar.gz
 Patch0:		%{name}-no-psql-src.patch
 URL:		http://postgis.refractions.net/
 BuildRequires:	geos-devel
+BuildRequires:	perl-base
 BuildRequires:	postgresql-backend-devel >= 7.1
 BuildRequires:	postgresql-devel >= 7.1
 BuildRequires:	proj-devel
