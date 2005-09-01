@@ -1,93 +1,84 @@
---- postgis-0.8.1/loader/Makefile.orig	2003-12-04 20:12:48.000000000 +0100
-+++ postgis-0.8.1/loader/Makefile	2004-04-05 22:37:27.211646584 +0200
-@@ -11,18 +11,11 @@
- endif
+diff -urN postgis-1.0.3.org/Makefile postgis-1.0.3/Makefile
+--- postgis-1.0.3.org/Makefile	2005-03-08 17:46:23.000000000 +0100
++++ postgis-1.0.3/Makefile	2005-09-01 11:50:22.270726320 +0200
+@@ -33,7 +33,7 @@
+ 	$(MAKE) -C regress clean
  
- # Root of the pgsql source tree 
--ifeq (${PGSQL_SRC},) 
--	top_builddir = ../../..
--	include $(top_builddir)/src/Makefile.global
--	libdir := $(libdir)/contrib
--else
--	top_builddir = ${PGSQL_SRC}
--	include $(top_builddir)/src/Makefile.global
--	libdir := ${PWD}
--endif
+ liblwgeom: 
+-	$(MAKE) -C lwgeom
++	$(MAKE) -C lwgeom all
  
- OBJS = shpopen.o dbfopen.o getopt.o
+ liblwgeom-clean:
+ 	$(MAKE) -C lwgeom clean
+diff -urN postgis-1.0.3.org/Makefile.config postgis-1.0.3/Makefile.config
+--- postgis-1.0.3.org/Makefile.config	2005-06-28 15:59:23.000000000 +0200
++++ postgis-1.0.3/Makefile.config	2005-08-31 17:58:14.000000000 +0200
+@@ -67,7 +67,6 @@
+ # set the PGSQL_SRC either below or in the environment (an absolute path).
+ #
+ # PGSQL_SRC=/usr/src/postgresql
+-PGSQL_SRC ?= ${PWD}/../..
+ 
+ #
+ # Set USE_ICONV to 1 if you want the loader (shp2pgsql)
+@@ -94,8 +93,6 @@
+ 
+ 
+ subdir=contrib/postgis
+-top_builddir = ${PGSQL_SRC}
+-include $(top_builddir)/src/Makefile.global
+ 
+ #
+ # This needs to be defined after PGSQL Makefile.global
+diff -urN postgis-1.0.3.org/loader/Makefile postgis-1.0.3/loader/Makefile
+--- postgis-1.0.3.org/loader/Makefile	2005-04-13 16:24:34.000000000 +0200
++++ postgis-1.0.3/loader/Makefile	2005-08-31 17:58:14.000000000 +0200
+@@ -18,6 +18,8 @@
+ 
+ OBJS = shpopen.o dbfopen.o getopt.o PQunescapeBytea.o
  
 +LDFLAGS = -lpq
 +
  #---------------------------------------------------------------
- # Test the version string and set the USE_VERSION macro
- # appropriately.
-@@ -39,7 +32,7 @@
  
- #---------------------------------------------------------------
- 
--override CFLAGS := -g -I.. -I$(srcdir) -I$(top_builddir)/src/interfaces/libpq $(CFLAGS) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"' -DUSE_VERSION=$(USE_VERSION)
-+override CFLAGS := -I.. -I$(srcdir) -I$(top_builddir)/src/interfaces/libpq $(CFLAGS) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"' -DUSE_VERSION=$(USE_VERSION)
- 
- all: shp2pgsql$(EXE) pgsql2shp$(EXE)
- 
---- postgis-0.9.0/Makefile.orig	2004-09-10 20:42:23.000000000 +0200
-+++ postgis-0.9.0/Makefile	2004-11-01 13:14:00.119638384 +0100
-@@ -49,9 +49,7 @@
- # To use a non-standard location set the PGSQL_SRC environment
- # variable to the appropriate location.
- #
--ifeq (${PGSQL_SRC},) 
--	PGSQL_SRC = ../..
--endif
-+srcdir = /usr/include/postgresql/server
- 
- #---------------------------------------------------------------
- # Path to library (to be specified in CREATE FUNCTION queries)
-@@ -63,10 +61,6 @@
+ ifeq ($(USE_ICONV),1)
+diff -urN postgis-1.0.3.org/lwgeom/Makefile postgis-1.0.3/lwgeom/Makefile
+--- postgis-1.0.3.org/lwgeom/Makefile	2005-06-28 16:50:39.000000000 +0200
++++ postgis-1.0.3/lwgeom/Makefile	2005-09-01 12:00:02.124575136 +0200
+@@ -66,6 +66,7 @@
  endif
  
- #---------------------------------------------------------------
--top_builddir = ${PGSQL_SRC}
--include $(top_builddir)/src/Makefile.global
--
--#---------------------------------------------------------------
- # Default missing CXX variable to c++
- # 
- ifeq ($(CXX),) 
-@@ -120,7 +114,7 @@
+ override CFLAGS += -I$(PROJ_DIR)/include -DAUTOCACHE_BBOX=$(AUTOCACHE_BBOX) 
++override CFLAGS += -I/usr/include/postgresql/server
  
- #---------------------------------------------------------------
+ override DLLLIBS += $(BE_DLLLIBS) 
  
--override CFLAGS += -g -fexceptions 
-+override CFLAGS += -fPIC -fexceptions 
- override CFLAGS += -I$(srcdir) -DFRONTEND -DSYSCONFDIR='"$(sysconfdir)"' 
- override CFLAGS += -DUSE_VERSION=$(USE_VERSION)
- override CFLAGS += -DPOSTGIS_LIB_VERSION='"$(POSTGIS_LIB_VERSION)"'
-@@ -186,12 +180,15 @@
+@@ -110,8 +111,6 @@
  #---------------------------------------------------------------
  # Makefile targets
  
 -include $(top_srcdir)/src/Makefile.shlib
 -
- postgis_geos_wrapper.o: postgis_geos_wrapper.cpp
+ wktparse.tab.c: wktparse.y
+ 	$(YACC) -vd -p lwg_parse_yy wktparse.y
+ 	mv -f y.tab.c wktparse.tab.c
+@@ -135,6 +134,9 @@
  
- all: $(GEOS_RULES) all-lib postgis.sql postgis_undef.sql loaderdumper
+ all: $(GEOS_RULES) $(shlib) ../lwpostgis.sql
  
-+all-lib: $(NAME).so
-+
-+$(NAME).so: $(OBJS)
++$(shlib): $(OBJS)
 +	$(CC) -shared -o $@ $^ $(SHLIB_LINK)
 +
- loaderdumper:
- 	$(MAKE) -C loader
+ # Shared library stuff
  
-@@ -240,6 +237,9 @@
- uninstall: uninstall-lib
- 	@rm -f $(docdir)/contrib/README.postgis $(datadir)/contrib/postgis.sql
+ ../lwpostgis.sql: lwpostgis.sql
+@@ -185,6 +187,9 @@
+ 
+ uninstall: uninstall-lib uninstall-lwgeom-scripts
  
 +clean-lib:
-+	rm -f $(NAME).so
++	rm -f $(shlib)
 +
- clean distclean maintainer-clean: clean-lib
- 	@rm -f $(OBJS) postgis.sql postgis_undef.sql postgis_geos_version.h
- 	$(MAKE) -C loader clean
+ clean distclean: clean-lib
+ 	rm -f *.o *.so *.a test $(OTHERS)
+ 
