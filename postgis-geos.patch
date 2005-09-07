@@ -1,0 +1,18 @@
+diff -urN postgis-1.0.3.org/geos_version.sh postgis-1.0.3/geos_version.sh
+--- postgis-1.0.3.org/geos_version.sh	2004-10-26 18:48:25.000000000 +0200
++++ postgis-1.0.3/geos_version.sh	2005-09-07 08:33:34.558676896 +0200
+@@ -20,10 +20,13 @@
+ else
+ 	major=`echo $version | sed 's/\..*//'`
+ 	minor=`echo $version | sed 's/[^\.]*\.\([^\.]*\)\..*/\1/'`
++	if [ "$version" = "$minor" ]; then
++		minor=`echo $version | sed 's/[^\.]*\.\([^\.]*\)/\1/'`
++	fi
+ 	first=$major
+ 	last=`expr $major + $minor`
+ 	geos_version=`printf %d%2.2d $major $minor`
+-	jtsport=`${geos_dir}/bin/geos-config --jtsport`
++	jtsport=`${geos_dir}/bin/geos-config --jtsport 2> /dev/null`
+ fi
+ cat <<EOF
+ #ifndef GEOS_FIRST_INTERFACE
