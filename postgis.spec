@@ -1,11 +1,9 @@
-
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	1.0.5
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}.tar.gz
