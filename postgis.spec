@@ -35,14 +35,17 @@ geograficznych.
 %patch0 -p1
 
 %build
-%{__make} all \
-	VERSION=%{pg_version} \
-	USE_PROJ=1 \
-	USE_GEOS=1 \
+%{__aclocal}
+%{__autoheader}
+%{__autoconf}
+%configure \
+	--with-geos \
+	--with-pgsql \
+	--with-proj
+%{__make} liblwgeom loaderdumper utils \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags}" \
-	GEOS_DIR="/usr" \
 	LPATH="%{_libdir}/postgresql" \
 	shlib="%{name}.so"
 
