@@ -10,6 +10,8 @@ Source0:	http://postgis.refractions.net/download/%{name}-%{version}.tar.gz
 # Source0-md5:	59b5f89d0a0230b00d80e779bb517520
 Patch0:		%{name}-geos.patch
 URL:		http://postgis.refractions.net/
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	geos-devel >= 2.1.4
 BuildRequires:	perl-base
 BuildRequires:	postgresql-backend-devel >= 7.1
