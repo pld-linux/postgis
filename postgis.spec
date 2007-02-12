@@ -1,6 +1,6 @@
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
 Summary:	Geographic Information Systems Extensions to PostgreSQL
-Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
+Summary(pl.UTF-8):   Rozszerzenie do PostgreSQL wspomagajÄ…ce Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	1.2.0
 Release:	2
@@ -27,9 +27,9 @@ This package contains a module which implements GIS simple features,
 ties the features to rtree indexing, and provides some spatial
 functions for accessing and analyzing geographic data.
 
-%description -l pl
-Pakiet ten zawiera modu³ implementuj±cy proste funkcje GIS, wi±¿e je z
-indeksowaniem rtree oraz dostarcza funkcje dostêpu oraz analizy danych
+%description -l pl.UTF-8
+Pakiet ten zawiera moduÅ‚ implementujÄ…cy proste funkcje GIS, wiÄ…Å¼e je z
+indeksowaniem rtree oraz dostarcza funkcje dostÄ™pu oraz analizy danych
 geograficznych.
 
 %prep
