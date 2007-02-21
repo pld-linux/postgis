@@ -1,18 +1,18 @@
-
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	1.0.3
+Version:	1.2.1
 Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}.tar.gz
-# Source0-md5:	1489d0678845958644c97faca642e7c6
-Patch0:		%{name}-no-psql-src.patch
+# Source0-md5:	95430ee371c64a992ebcd8ddf2801acf
+Patch0:		%{name}-geos.patch
 URL:		http://postgis.refractions.net/
-BuildRequires:	geos-devel
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	geos-devel >= 2.1.4
 BuildRequires:	perl-base
 BuildRequires:	postgresql-backend-devel >= 7.1
 BuildRequires:	postgresql-devel >= 7.1
@@ -37,13 +37,20 @@ geograficznych.
 %patch0 -p1
 
 %build
-%{__make} all \
-	VERSION=%{pg_version} \
-	USE_PROJ=1 \
-	USE_GEOS=1 \
+%{__aclocal}
+%{__autoheader}
+%{__autoconf}
+%configure \
+	--with-geos \
+	--with-geos-libdir=/usr/%{_lib} \
+	--with-pgsql \
+	--with-proj \
+	--with-proj-libdir=/usr/%{_lib}
+
+%{__make} liblwgeom loaderdumper utils \
 	CC="%{__cc}" \
+	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags}" \
-	GEOS_DIR="/usr" \
 	LPATH="%{_libdir}/postgresql" \
 	shlib="%{name}.so"
 
@@ -62,6 +69,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES CREDITS README.postgis TODO doc/html examples/wkb_reader *.sql
+%doc CREDITS NEWS README.postgis TODO doc/html *.sql
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/postgresql/%{name}.so
