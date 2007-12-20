@@ -2,12 +2,12 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	1.3.1
+Version:	1.3.2
 Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}.tar.gz
-# Source0-md5:	dd90f80072fc3e32d3a3eb580542bda1
+# Source0-md5:	b0d52c2c23c316fc9884632a80b380a5
 Patch0:		%{name}-geos.patch
 URL:		http://postgis.refractions.net/
 BuildRequires:	geos-devel >= 2.1.4
