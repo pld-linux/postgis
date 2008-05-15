@@ -49,19 +49,21 @@ geograficznych.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir}}
+install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir},%{_datadir}/postgresql/contrib}
 
 %{__make} -C loader install \
 	bindir="$RPM_BUILD_ROOT%{_bindir}" \
 	INSTALL_PROGRAM=install
 
 install lwgeom/%{name}.so $RPM_BUILD_ROOT%{_libdir}/postgresql
+install *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CREDITS NEWS README.postgis TODO doc/html *.sql
+%doc CREDITS NEWS README.postgis TODO doc/html
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/postgresql/%{name}.so
+%{_datadir}/postgresql/contrib/*.sql
