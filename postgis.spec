@@ -3,7 +3,7 @@ Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	1.3.3
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}.tar.gz
@@ -55,7 +55,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir},%{_datadir}/postgres
 	bindir="$RPM_BUILD_ROOT%{_bindir}" \
 	INSTALL_PROGRAM=install
 
-install lwgeom/%{name}.so $RPM_BUILD_ROOT%{_libdir}/postgresql
+install lwgeom/*.so* $RPM_BUILD_ROOT%{_libdir}/postgresql
 install *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
 
 %clean
@@ -65,5 +65,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CREDITS NEWS README.postgis TODO doc/html
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/postgresql/%{name}.so
+%attr(755,root,root) %{_libdir}/postgresql/*.so*
 %{_datadir}/postgresql/contrib/*.sql
