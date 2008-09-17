@@ -1,18 +1,15 @@
-
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-
 Summary:	Geographic Information Systems Extensions to PostgreSQL
-Summary(pl):	Rozszerzenie do PostgreSQL wspomagaj±ce Geograficzne Systemy Informacyjne
+Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagajÄ…ce Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	1.0.3
-Release:	1
+Version:	1.3.3
+Release:	2
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}.tar.gz
-# Source0-md5:	1489d0678845958644c97faca642e7c6
-Patch0:		%{name}-no-psql-src.patch
+# Source0-md5:	0a1df813ca9450e874663f16a35ec34a
 URL:		http://postgis.refractions.net/
-BuildRequires:	geos-devel
+BuildRequires:	geos-devel >= 2.1.4
 BuildRequires:	perl-base
 BuildRequires:	postgresql-backend-devel >= 7.1
 BuildRequires:	postgresql-devel >= 7.1
@@ -27,41 +24,46 @@ This package contains a module which implements GIS simple features,
 ties the features to rtree indexing, and provides some spatial
 functions for accessing and analyzing geographic data.
 
-%description -l pl
-Pakiet ten zawiera modu³ implementuj±cy proste funkcje GIS, wi±¿e je z
-indeksowaniem rtree oraz dostarcza funkcje dostêpu oraz analizy danych
+%description -l pl.UTF-8
+Pakiet ten zawiera moduÅ‚ implementujÄ…cy proste funkcje GIS, wiÄ…Å¼e je z
+indeksowaniem rtree oraz dostarcza funkcje dostÄ™pu oraz analizy danych
 geograficznych.
 
 %prep
 %setup  -q
-%patch0 -p1
 
 %build
-%{__make} all \
-	VERSION=%{pg_version} \
-	USE_PROJ=1 \
-	USE_GEOS=1 \
+%configure \
+	--with-geos \
+	--with-geos-libdir=/usr/%{_lib} \
+	--with-pgsql \
+	--with-proj=%{_prefix} \
+	--with-proj-libdir=/usr/%{_lib}
+
+%{__make} liblwgeom loaderdumper utils \
 	CC="%{__cc}" \
+	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags}" \
-	GEOS_DIR="/usr" \
 	LPATH="%{_libdir}/postgresql" \
 	shlib="%{name}.so"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir}}
+install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir},%{_datadir}/postgresql/contrib}
 
 %{__make} -C loader install \
 	bindir="$RPM_BUILD_ROOT%{_bindir}" \
 	INSTALL_PROGRAM=install
 
-install lwgeom/%{name}.so $RPM_BUILD_ROOT%{_libdir}/postgresql
+install lwgeom/*.so* $RPM_BUILD_ROOT%{_libdir}/postgresql
+install *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES CREDITS README.postgis TODO doc/html examples/wkb_reader *.sql
+%doc CREDITS NEWS README.postgis TODO doc/html
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/postgresql/%{name}.so
+%attr(755,root,root) %{_libdir}/postgresql/*.so*
+%{_datadir}/postgresql/contrib/*.sql
