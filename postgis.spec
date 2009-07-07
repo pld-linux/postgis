@@ -1,16 +1,16 @@
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-%define	beta %{nil}
+%define	beta rc1
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	1.3.6
-Release:	1
+Version:	1.4.0
+Release:	0.%{beta}.1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	da590f0e485335e9cdaeb66c3d68aa24
+# Source0-md5:	f380bfdb29792f712662ab53967f4652
 URL:		http://postgis.refractions.net/
-BuildRequires:	geos-devel >= 2.1.4
+BuildRequires:	geos-devel >= 3.1.1
 BuildRequires:	perl-base
 BuildRequires:	postgresql-backend-devel >= 7.1
 BuildRequires:	postgresql-devel >= 7.1
@@ -41,7 +41,7 @@ geograficznych.
 	--with-proj=%{_prefix} \
 	--with-proj-libdir=/usr/%{_lib}
 
-%{__make} liblwgeom loaderdumper utils \
+%{__make} \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags}" \
@@ -54,10 +54,12 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir},%{_datadir}/postgres
 
 %{__make} -C loader install \
 	bindir="$RPM_BUILD_ROOT%{_bindir}" \
+    PGSQL_BINDIR="$RPM_BUILD_ROOT%{_bindir}" \
 	INSTALL_PROGRAM=install
 
-install lwgeom/*.so* $RPM_BUILD_ROOT%{_libdir}/postgresql
-install *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
+sed -i 's#\$libdir/postgis-1.4#%{_libdir}/postgresql/postgis#g' postgis/postgis*.sql
+install postgis/*.so* $RPM_BUILD_ROOT%{_libdir}/postgresql
+install postgis/*.sql *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
