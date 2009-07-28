@@ -1,14 +1,14 @@
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-%define	beta rc2
+%define	beta %{nil}
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	1.4.0
-Release:	0.%{beta}.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	ebb7f7cd0f47aa70bb544d29cb7e8282
+# Source0-md5:	bc5b97d5399bd20ca90bfdf784ab6c33
 URL:		http://postgis.refractions.net/
 BuildRequires:	geos-devel >= 3.1.1
 BuildRequires:	perl-base
