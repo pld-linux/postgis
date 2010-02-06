@@ -11,12 +11,15 @@ Source0:	http://postgis.refractions.net/download/%{name}-%{version}%{beta}.tar.g
 # Source0-md5:	8c0d291296033deee4d7f545e5d8218f
 URL:		http://postgis.refractions.net/
 BuildRequires:	geos-devel >= 3.1.1
+BuildRequires:	libxml2-devel
 BuildRequires:	perl-base
 BuildRequires:	postgresql-backend-devel >= 7.1
 BuildRequires:	postgresql-devel >= 7.1
 BuildRequires:	proj-devel
 Requires:	postgresql-module-plpgsql = %{pg_version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		specflags_x86_64	-fPIC
 
 # oh well... I also don't understand this... ;)
 
@@ -44,7 +47,7 @@ geograficznych.
 %{__make} \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
-	CFLAGS="%{rpmcflags}" \
+	CFLAGS="%{rpmcppflags} %{rpmcflags}" \
 	LPATH="%{_libdir}/postgresql" \
 	shlib="%{name}.so"
 
