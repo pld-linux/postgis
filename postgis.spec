@@ -59,7 +59,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir},%{_datadir}/postgres
     PGSQL_BINDIR="$RPM_BUILD_ROOT%{_bindir}" \
 	INSTALL_PROGRAM=install
 
-sed -i 's#\$libdir/postgis-1.4#%{_libdir}/postgresql/postgis#g' postgis/postgis*.sql
+sed -i 's#\$libdir/postgis-1.5#%{_libdir}/postgresql/postgis#g' postgis/postgis*.sql
 install postgis/*.so* $RPM_BUILD_ROOT%{_libdir}/postgresql
 install postgis/*.sql *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
 
