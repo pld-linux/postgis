@@ -1,5 +1,5 @@
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-%define	beta %nil
+%define	beta %{nil}
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
