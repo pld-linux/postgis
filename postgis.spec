@@ -1,15 +1,20 @@
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-%define	beta %{nil}
+%define	beta rc1
+
+# Conditional build:
+%bcond_without  raster # disable raster support
+
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	1.5.3
-Release:	1
+Version:	2.0.0
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	05a61df5e1b78bf51c9ce98bea5526fc
+# Source0-md5:	13f67b8caa25676c2d0ff617b3a63031
 URL:		http://postgis.refractions.net/
+%{?with_raster:BuildRequires:	gdal-devel >= 1.6.0}
 BuildRequires:	geos-devel >= 3.2.0
 BuildRequires:	libxml2-devel
 BuildRequires:	perl-base
@@ -41,7 +46,8 @@ geograficznych.
 	--with-geos-libdir=/usr/%{_lib} \
 	--with-pgsql \
 	--with-proj=%{_prefix} \
-	--with-proj-libdir=/usr/%{_lib}
+	--with-proj-libdir=/usr/%{_lib} \
+	%{!?with_raster:--without-raster}
 
 %{__make} \
 	CC="%{__cc}" \
