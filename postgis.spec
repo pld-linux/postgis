@@ -1,5 +1,5 @@
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-%define	beta rc1
+%define	beta rc2
 
 # Conditional build:
 %bcond_without  raster # disable raster support
@@ -8,11 +8,11 @@ Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	2.0.0
-Release:	0.1
+Release:	0.%{beta}.1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	13f67b8caa25676c2d0ff617b3a63031
+# Source0-md5:	2337db7420746aeaeb631c950bbaeb82
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.6.0}
 BuildRequires:	geos-devel >= 3.2.0
@@ -49,23 +49,17 @@ geograficznych.
 	--with-proj-libdir=/usr/%{_lib} \
 	%{!?with_raster:--without-raster}
 
-%{__make} \
-	CC="%{__cc}" \
-	CXX="%{__cxx}" \
-	CFLAGS="%{rpmcppflags} %{rpmcflags}" \
-	LPATH="%{_libdir}/postgresql"
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/postgresql,%{_bindir},%{_datadir}/postgresql/contrib}
 
-%{__make} -C loader install \
-	bindir="$RPM_BUILD_ROOT%{_bindir}" \
-    PGSQL_BINDIR="$RPM_BUILD_ROOT%{_bindir}" \
-	INSTALL_PROGRAM=install
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-install postgis/*.so* $RPM_BUILD_ROOT%{_libdir}/postgresql
-install postgis/*.sql *.sql $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
+# put into lib subpackage if we are interested in the files below?
+rm $RPM_BUILD_ROOT%{_includedir}/liblwgeom.h \
+	$RPM_BUILD_ROOT%{_libdir}/liblwgeom.a \
+	$RPM_BUILD_ROOT%{_libdir}/liblwgeom.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -75,4 +69,5 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS NEWS README.postgis TODO doc/html
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/postgresql/*.so*
-%{_datadir}/postgresql/contrib/*.sql
+%{_libdir}/lib*.so
+%{_datadir}/postgresql/contrib/postgis-2.0
