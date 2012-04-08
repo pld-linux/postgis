@@ -57,6 +57,7 @@ Summary:	Data import GUI for PostGIS
 Summary(pl.UTF-8):	Graficzny interfejs użytkownika importujący dane dla PostGIS-a
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
+Requires:	gtk+2 >= 2:2.8.0
 
 %description gui
 Data import GUI for PostGIS.
