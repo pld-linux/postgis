@@ -9,12 +9,12 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.0.0
-Release:	2
+Version:	2.0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://postgis.refractions.net/download/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	639d2b5d6a7dc94ea2e60d6942a615bc
+# Source0-md5:	7af9ce5f7dfb22d81fea7f041e674497
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.6.0}
 BuildRequires:	geos-devel >= 3.2.0
@@ -154,7 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n liblwgeom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblwgeom-2.0.0.so
+%attr(755,root,root) %{_libdir}/liblwgeom-?.?.?.so
 
 %files -n liblwgeom-devel
 %defattr(644,root,root,755)
