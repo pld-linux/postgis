@@ -35,6 +35,7 @@ BuildRequires:	libxslt-progs
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	pkgconfig
 %endif
+%{?with_raster:Requires:	gdal >= 1.6.0}
 Requires:	liblwgeom = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -134,7 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CREDITS NEWS README.postgis TODO %{?with_doc:doc/html}
+%doc CREDITS LICENSE.TXT NEWS README.postgis TODO %{?with_doc:doc/html}
 %attr(755,root,root) %{_bindir}/pgsql2shp
 %attr(755,root,root) %{_bindir}/shp2pgsql
 %attr(755,root,root) %{_libdir}/postgresql/postgis-2.0.so
