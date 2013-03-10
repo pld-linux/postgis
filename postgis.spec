@@ -9,15 +9,15 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.0.2
+Version:	2.0.3
 Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	f11e7b6258a9b37a268df531b692f892
+# Source0-md5:	23dce6a04992d5fdd07593b6bccf3a7d
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.6.0}
-BuildRequires:	geos-devel >= 3.2.0
+BuildRequires:	geos-devel >= 3.3.2
 BuildRequires:	json-c-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libxml2-devel
@@ -70,7 +70,7 @@ Graficzny interfejs użytkownika importujący dane dla PostGIS-a.
 Summary:	lwgeom library (a part of PostGIS project)
 Summary(pl.UTF-8):	Biblioteka lwgeom (część projektu PostGIS)
 Group:		Libraries
-Requires:	geos >= 3.2.0
+Requires:	geos >= 3.3.2
 Requires:	proj >= 4.5.0
 Conflicts:	postgis < 2.0.0-2
 
@@ -84,7 +84,7 @@ Biblioteka lwgeom (część projektu PostGIS).
 Summary:	Header file for lwgeom library
 Summary(pl.UTF-8):	Plik nagłówkowy biblioteki lwgeom
 Group:		Development/Libraries
-Requires:	geos-devel >= 3.2.0
+Requires:	geos-devel >= 3.3.2
 Requires:	liblwgeom = %{version}-%{release}
 Requires:	proj-devel >= 4.5.0
 
