@@ -9,12 +9,12 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.0.3
+Version:	2.1.0
 Release:	1
 License:	GPL v2
 Group:		Applications/Databases
 Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	23dce6a04992d5fdd07593b6bccf3a7d
+# Source0-md5:	adb82dca6e173451d0a4a39d7ddc9a2c
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.6.0}
 BuildRequires:	geos-devel >= 3.3.2
@@ -138,11 +138,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS LICENSE.TXT NEWS README.postgis TODO %{?with_doc:doc/html}
 %attr(755,root,root) %{_bindir}/pgsql2shp
 %attr(755,root,root) %{_bindir}/shp2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/postgis-2.0.so
-%{_datadir}/postgresql/contrib/postgis-2.0
+%attr(755,root,root) %{_libdir}/postgresql/postgis-2.1.so
+%{_datadir}/postgresql/contrib/postgis-2.1
 %if %{with raster}
 %attr(755,root,root) %{_bindir}/raster2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.0.so
+%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.1.so
 %{_datadir}/postgresql/extension/postgis*.control
 %{_datadir}/postgresql/extension/postgis*.sql
 %endif
