@@ -11,3 +11,12 @@
  #include <string.h>
  
  static void geojson_lwerror(char *msg, int error_code)
+@@ -510,7 +510,7 @@
+ 	if( jstok->err != json_tokener_success)
+ 	{
+ 		char err[256];
+-		snprintf(err, 256, "%s (at offset %d)", json_tokener_errors[jstok->err], jstok->char_offset);
++		snprintf(err, 256, "%s (at offset %d)", json_tokener_error_desc(jstok->err), jstok->char_offset);
+ 		json_tokener_free(jstok);
+     json_object_put(poObj);
+ 		geojson_lwerror(err, 1);
