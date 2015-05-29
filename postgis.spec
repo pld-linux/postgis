@@ -1,3 +1,4 @@
+# TODO: sfcgal support (sfcgal-config)
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
 %define	beta %{nil}
 #
@@ -9,23 +10,22 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.1.4
-Release:	2
+Version:	2.1.7
+Release:	1
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	6f7bacc0205859dafdfe545db1b892ca
+# Source0-md5:	f35307c201caf04e7028f95b649cf6e7
 URL:		http://postgis.refractions.net/
-%{?with_raster:BuildRequires:	gdal-devel >= 1.6.0}
-BuildRequires:	gdal-devel
+%{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
 BuildRequires:	geos-devel >= 3.3.2
 BuildRequires:	json-c-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	perl-base
-BuildRequires:	postgresql-backend-devel >= 8.3
-BuildRequires:	postgresql-devel >= 8.3
-BuildRequires:	proj-devel >= 4.5.0
+BuildRequires:	postgresql-backend-devel >= 9.0
+BuildRequires:	postgresql-devel >= 9.0
+BuildRequires:	proj-devel >= 4.6.0
 %if %{with doc}
 BuildRequires:	ImageMagick
 BuildRequires:	docbook-style-xsl
@@ -36,7 +36,7 @@ BuildRequires:	libxslt-progs
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	pkgconfig
 %endif
-%{?with_raster:Requires:	gdal >= 1.6.0}
+%{?with_raster:Requires:	gdal >= 1.8.0}
 Requires:	liblwgeom = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -72,7 +72,7 @@ Summary:	lwgeom library (a part of PostGIS project)
 Summary(pl.UTF-8):	Biblioteka lwgeom (część projektu PostGIS)
 Group:		Libraries
 Requires:	geos >= 3.3.2
-Requires:	proj >= 4.5.0
+Requires:	proj >= 4.6.0
 Conflicts:	postgis < 2.0.0-2
 
 %description -n liblwgeom
@@ -87,7 +87,7 @@ Summary(pl.UTF-8):	Plik nagłówkowy biblioteki lwgeom
 Group:		Development/Libraries
 Requires:	geos-devel >= 3.3.2
 Requires:	liblwgeom = %{version}-%{release}
-Requires:	proj-devel >= 4.5.0
+Requires:	proj-devel >= 4.6.0
 
 %description -n liblwgeom-devel
 Header file for lwgeom library.
