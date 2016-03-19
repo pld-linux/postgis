@@ -19,7 +19,7 @@ Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.ta
 Patch0:		%{name}-link.patch
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
-BuildRequires:	geos-devel >= 3.3.2
+BuildRequires:	geos-devel >= 3.5.0
 BuildRequires:	json-c-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libxml2-devel >= 2.0
@@ -75,7 +75,7 @@ Graficzny interfejs użytkownika importujący dane dla PostGIS-a.
 Summary:	lwgeom library (a part of PostGIS project)
 Summary(pl.UTF-8):	Biblioteka lwgeom (część projektu PostGIS)
 Group:		Libraries
-Requires:	geos >= 3.3.2
+Requires:	geos >= 3.5.0
 Requires:	proj >= 4.6.0
 Conflicts:	postgis < 2.0.0-2
 
@@ -89,7 +89,7 @@ Biblioteka lwgeom (część projektu PostGIS).
 Summary:	Header file for lwgeom library
 Summary(pl.UTF-8):	Plik nagłówkowy biblioteki lwgeom
 Group:		Development/Libraries
-Requires:	geos-devel >= 3.3.2
+Requires:	geos-devel >= 3.5.0
 Requires:	liblwgeom = %{version}-%{release}
 Requires:	proj-devel >= 4.6.0
 
