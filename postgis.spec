@@ -1,6 +1,5 @@
-# TODO: sfcgal support (sfcgal-config)
+# TODO: sfcgal support (sfcgal-config, >= 1.1.0)
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
-%define	beta %{nil}
 #
 # Conditional build:
 %bcond_without  raster	# disable raster support
@@ -10,27 +9,31 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.1.7
-Release:	3
+Version:	2.2.1
+%define	subver %{nil}
+Release:	1
 License:	GPL v2+
 Group:		Applications/Databases
-Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{beta}.tar.gz
-# Source0-md5:	f35307c201caf04e7028f95b649cf6e7
+Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
+# Source0-md5:	dc3575a0aac5a7e0bbddde17eb6be400
+Patch0:		%{name}-link.patch
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
 BuildRequires:	geos-devel >= 3.3.2
 BuildRequires:	json-c-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libxml2-devel
+BuildRequires:	libxml2-devel >= 2.0
+BuildRequires:	pcre-devel
 BuildRequires:	perl-base
-BuildRequires:	postgresql-backend-devel >= 9.0
-BuildRequires:	postgresql-devel >= 9.0
+BuildRequires:	postgresql-backend-devel >= 9.1
+BuildRequires:	postgresql-devel >= 9.1
 BuildRequires:	proj-devel >= 4.6.0
 %if %{with doc}
 BuildRequires:	ImageMagick
 BuildRequires:	docbook-style-xsl
 BuildRequires:	libxml2-progs
 BuildRequires:	libxslt-progs
+# TODO: mathml DTD (http://www.w3.org/Math/DTD/mathml2/mathml2.dtd, e.g. /usr/share/xml/schema/w3c/mathml/dtd)
 %endif
 %if %{with gui}
 BuildRequires:	gtk+2-devel >= 2:2.8.0
@@ -38,6 +41,7 @@ BuildRequires:	pkgconfig
 %endif
 %{?with_raster:Requires:	gdal >= 1.8.0}
 Requires:	liblwgeom = %{version}-%{release}
+Requires:	postgresql >= %{pg_version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		specflags_x86_64	-fPIC
@@ -108,16 +112,12 @@ Static lwgeom library.
 Statyczna biblioteka lwgeom.
 
 %prep
-%setup -q -n %{name}-%{version}%{beta}
+%setup -q -n %{name}-%{version}%{subver}
+%patch0 -p1
 
 %build
 %configure \
-	--with-geos \
-	--with-geos-libdir=/usr/%{_lib} \
 	%{?with_gui:--with-gui} \
-	--with-pgsql \
-	--with-proj=%{_prefix} \
-	--with-proj-libdir=/usr/%{_lib} \
 	%{!?with_raster:--without-raster}
 
 %{__make}
@@ -139,11 +139,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS LICENSE.TXT NEWS README.postgis TODO %{?with_doc:doc/html}
 %attr(755,root,root) %{_bindir}/pgsql2shp
 %attr(755,root,root) %{_bindir}/shp2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/postgis-2.1.so
-%{_datadir}/postgresql/contrib/postgis-2.1
+%attr(755,root,root) %{_libdir}/postgresql/postgis-2.2.so
+%attr(755,root,root) %{_libdir}/postgresql/postgis_topology-2.2.so
+%{_datadir}/postgresql/contrib/postgis-2.2
 %if %{with raster}
 %attr(755,root,root) %{_bindir}/raster2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.1.so
+%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.2.so
 %{_datadir}/postgresql/extension/postgis*.control
 %{_datadir}/postgresql/extension/postgis*.sql
 %endif
@@ -156,13 +157,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n liblwgeom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblwgeom-?.?.?.so
+%attr(755,root,root) %{_libdir}/liblwgeom-2.2.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblwgeom-2.2.so.5
 
 %files -n liblwgeom-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/liblwgeom.so
 %{_libdir}/liblwgeom.la
 %{_includedir}/liblwgeom.h
+%{_includedir}/liblwgeom_topo.h
 
 %files -n liblwgeom-static
 %defattr(644,root,root,755)
