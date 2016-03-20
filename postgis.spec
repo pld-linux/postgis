@@ -120,7 +120,7 @@ Statyczna biblioteka lwgeom.
 	%{?with_gui:--with-gui} \
 	%{!?with_raster:--without-raster}
 
-%{__make}
+%{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
