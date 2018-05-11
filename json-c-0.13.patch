@@ -1,0 +1,10 @@
+--- postgis-2.2.1/liblwgeom/lwin_geojson.c~	2015-11-06 21:14:47.000000000 +0000
++++ postgis-2.2.1/liblwgeom/lwin_geojson.c	2018-05-11 05:07:55.774871737 +0000
+@@ -19,7 +19,6 @@
+ 
+ #ifdef HAVE_LIBJSON_C
+ #include <json-c/json.h>
+-#include <json-c/json_object_private.h>
+ #else
+ #include <json/json.h>
+ #include <json/json_object_private.h>

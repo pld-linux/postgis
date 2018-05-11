@@ -17,6 +17,8 @@ Group:		Applications/Databases
 Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
 # Source0-md5:	dc3575a0aac5a7e0bbddde17eb6be400
 Patch0:		%{name}-link.patch
+Patch1:		json-c-0.13.patch
+Patch2:		postgres10.patch
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
 BuildRequires:	geos-devel >= 3.5.0
@@ -114,8 +116,11 @@ Statyczna biblioteka lwgeom.
 %prep
 %setup -q -n %{name}-%{version}%{subver}
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
+%{__autoconf}
 %configure \
 	%{?with_gui:--with-gui} \
 	%{!?with_raster:--without-raster}
