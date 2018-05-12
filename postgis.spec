@@ -9,16 +9,13 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.2.1
+Version:	2.4.4
 %define	subver %{nil}
 Release:	1
 License:	GPL v2+
 Group:		Applications/Databases
-Source0:	http://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
-# Source0-md5:	dc3575a0aac5a7e0bbddde17eb6be400
-Patch0:		%{name}-link.patch
-Patch1:		json-c-0.13.patch
-Patch2:		postgres10.patch
+Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
+# Source0-md5:	87608a7f01a50c5bae72a00ba3314e2d
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
 BuildRequires:	geos-devel >= 3.5.0
@@ -115,12 +112,8 @@ Statyczna biblioteka lwgeom.
 
 %prep
 %setup -q -n %{name}-%{version}%{subver}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
-%{__autoconf}
 %configure \
 	%{?with_gui:--with-gui} \
 	%{!?with_raster:--without-raster}
@@ -133,6 +126,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+# Fix icons and desktop file locations
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/icons
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/applications
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -144,26 +141,31 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS LICENSE.TXT NEWS README.postgis TODO %{?with_doc:doc/html}
 %attr(755,root,root) %{_bindir}/pgsql2shp
 %attr(755,root,root) %{_bindir}/shp2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/postgis-2.2.so
-%attr(755,root,root) %{_libdir}/postgresql/postgis_topology-2.2.so
-%{_datadir}/postgresql/contrib/postgis-2.2
+%attr(755,root,root) %{_libdir}/postgresql/postgis-2.4.so
+%attr(755,root,root) %{_libdir}/postgresql/postgis_topology-2.4.so
+%{_datadir}/postgresql/contrib/postgis-2.4
 %if %{with raster}
 %attr(755,root,root) %{_bindir}/raster2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.2.so
+%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.4.so
 %{_datadir}/postgresql/extension/postgis*.control
 %{_datadir}/postgresql/extension/postgis*.sql
 %endif
+%{_libdir}/postgresql/address_standardizer-2.4.so
+%{_datadir}/postgresql/extension/address_standardizer*.sql
+%{_datadir}/postgresql/extension/address_standardizer*.control
 
 %if %{with gui}
 %files gui
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/shp2pgsql-gui
+%{_desktopdir}/shp2pgsql-gui.desktop
+%{_iconsdir}/hicolor/*x*/apps/shp2pgsql-gui.png
 %endif
 
 %files -n liblwgeom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblwgeom-2.2.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblwgeom-2.2.so.5
+%attr(755,root,root) %{_libdir}/liblwgeom-2.4.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblwgeom-2.4.so.0
 
 %files -n liblwgeom-devel
 %defattr(644,root,root,755)
