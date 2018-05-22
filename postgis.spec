@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy
 Name:		postgis
 Version:	2.4.4
 %define	subver %{nil}
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
@@ -129,6 +129,8 @@ rm -rf $RPM_BUILD_ROOT
 # Fix icons and desktop file locations
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/icons
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/applications
+
+%{__rm} -r $RPM_BUILD_ROOT%{_iconsdir}/hicolor/40x40
 
 %clean
 rm -rf $RPM_BUILD_ROOT
