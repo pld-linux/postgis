@@ -9,13 +9,13 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	2.4.4
+Version:	2.5.0
 %define	subver %{nil}
-Release:	2
+Release:	1
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
-# Source0-md5:	87608a7f01a50c5bae72a00ba3314e2d
+# Source0-md5:	8e24ef45660d3e734870eef3904bc54f
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
 BuildRequires:	geos-devel >= 3.5.0
@@ -114,6 +114,7 @@ Statyczna biblioteka lwgeom.
 %setup -q -n %{name}-%{version}%{subver}
 
 %build
+export CFLAGS="%{rpmcflags} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
 %configure \
 	%{?with_gui:--with-gui} \
 	%{!?with_raster:--without-raster}
@@ -143,16 +144,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS LICENSE.TXT NEWS README.postgis TODO %{?with_doc:doc/html}
 %attr(755,root,root) %{_bindir}/pgsql2shp
 %attr(755,root,root) %{_bindir}/shp2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/postgis-2.4.so
-%attr(755,root,root) %{_libdir}/postgresql/postgis_topology-2.4.so
-%{_datadir}/postgresql/contrib/postgis-2.4
+%attr(755,root,root) %{_libdir}/postgresql/postgis-2.5.so
+%attr(755,root,root) %{_libdir}/postgresql/postgis_topology-2.5.so
+%{_datadir}/postgresql/contrib/postgis-2.5
 %if %{with raster}
 %attr(755,root,root) %{_bindir}/raster2pgsql
-%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.4.so
+%attr(755,root,root) %{_libdir}/postgresql/rtpostgis-2.5.so
 %{_datadir}/postgresql/extension/postgis*.control
 %{_datadir}/postgresql/extension/postgis*.sql
 %endif
-%{_libdir}/postgresql/address_standardizer-2.4.so
+%{_libdir}/postgresql/address_standardizer.so
 %{_datadir}/postgresql/extension/address_standardizer*.sql
 %{_datadir}/postgresql/extension/address_standardizer*.control
 
@@ -166,8 +167,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n liblwgeom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblwgeom-2.4.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblwgeom-2.4.so.0
+%attr(755,root,root) %{_libdir}/liblwgeom-2.5.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblwgeom-2.5.so.0
 
 %files -n liblwgeom-devel
 %defattr(644,root,root,755)
