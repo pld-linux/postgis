@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy
 Name:		postgis
 Version:	3.0.0
 %define	subver %{nil}
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
@@ -133,8 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-cp -p postgis_config.h $RPM_BUILD_ROOT%{_includedir}
-
+%{__sed} -e '/#include .*/d' postgis_config.h > $RPM_BUILD_ROOT%{_includedir}/postgis_config.h
 %{__sed} -i -e 's/#include.*postgis_config.*/#include "postgis_config.h"/' $RPM_BUILD_ROOT%{_includedir}/liblwgeom.h
 
 # Fix icons and desktop file locations
