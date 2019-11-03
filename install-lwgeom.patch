@@ -1,0 +1,27 @@
+--- postgis-3.0.0/liblwgeom/Makefile.in~	2019-10-20 04:26:04.000000000 +0200
++++ postgis-3.0.0/liblwgeom/Makefile.in	2019-11-03 16:54:16.676165887 +0100
+@@ -163,7 +163,14 @@
+ 
+ all: liblwgeom.la
+ 
+-install:
++install: install-liblwgeom
++
++install-liblwgeom: liblwgeom.la
++	$(INSTALL) -d "$(DESTDIR)$(libdir)"
++	$(LIBTOOL) --mode=install $(INSTALL) liblwgeom.la "$(DESTDIR)$(libdir)/liblwgeom.la"
++	$(INSTALL) -d "$(DESTDIR)$(includedir)"
++	$(INSTALL) -m 0644 liblwgeom.h "$(DESTDIR)$(includedir)/liblwgeom.h"
++	$(INSTALL) -m 0644 liblwgeom_topo.h "$(DESTDIR)$(includedir)/liblwgeom_topo.h"
+ 
+ uninstall:
+ 
+@@ -175,7 +175,7 @@
+ 
+ liblwgeom.la: $(LT_OBJS)
+ 	$(LIBTOOL) --tag=CC --mode=link $(CC) -rpath $(libdir) $(LT_OBJS) \
+-             -release $(SOVER) -version-info $(VERSION_INFO) $(LDFLAGS) -static -o $@
++             -release $(SOVER) -version-info $(VERSION_INFO) $(LDFLAGS) -o $@
+ 
+ maintainer-clean: clean
+ 	rm -f lwin_wkt_lex.c
