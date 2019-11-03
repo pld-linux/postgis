@@ -19,6 +19,7 @@ Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.t
 Patch0:		install-lwgeom.patch
 URL:		http://postgis.refractions.net/
 %{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
+BuildRequires:	clang
 BuildRequires:	geos-devel >= 3.5.0
 BuildRequires:	json-c-devel
 BuildRequires:	libstdc++-devel
@@ -45,6 +46,9 @@ Requires:	postgresql >= %{pg_version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		specflags_x86_64	-fPIC
+
+# clang can't parse this
+%define		filterout		-fvar-tracking-assignments
 
 # oh well... I also don't understand this... ;)
 
@@ -121,7 +125,7 @@ export CFLAGS="%{rpmcflags} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
 	%{?with_gui:--with-gui} \
 	%{!?with_raster:--without-raster}
 
-%{__make} -j1
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
