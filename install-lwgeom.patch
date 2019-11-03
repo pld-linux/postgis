@@ -1,6 +1,6 @@
 --- postgis-3.0.0/liblwgeom/Makefile.in~	2019-10-20 04:26:04.000000000 +0200
 +++ postgis-3.0.0/liblwgeom/Makefile.in	2019-11-03 16:54:16.676165887 +0100
-@@ -163,7 +163,14 @@
+@@ -163,7 +163,15 @@
  
  all: liblwgeom.la
  
@@ -13,6 +13,7 @@
 +	$(INSTALL) -d "$(DESTDIR)$(includedir)"
 +	$(INSTALL) -m 0644 liblwgeom.h "$(DESTDIR)$(includedir)/liblwgeom.h"
 +	$(INSTALL) -m 0644 liblwgeom_topo.h "$(DESTDIR)$(includedir)/liblwgeom_topo.h"
++	$(INSTALL) -m 0644 lwinline.h "$(DESTDIR)$(includedir)/lwinline.h"
  
  uninstall:
  
