@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy
 Name:		postgis
 Version:	3.0.0
 %define	subver %{nil}
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
