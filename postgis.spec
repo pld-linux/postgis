@@ -1,4 +1,5 @@
-# TODO: sfcgal support (sfcgal-config, >= 1.1.0)
+# TODO: sfcgal support (sfcgal-config, >= 1.3.1)
+# xml2pot for translations
 %define pg_version	%(rpm -q --queryformat '%{VERSION}' postgresql-backend-devel)
 #
 # Conditional build:
@@ -9,26 +10,29 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	3.0.0
-%define	subver %{nil}
-Release:	6
+Version:	3.3.2
+Release:	1
 License:	GPL v2+
 Group:		Applications/Databases
-Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}%{subver}.tar.gz
-# Source0-md5:	725019e3a67ac52ccef4d00031cb0c77
+Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}.tar.gz
+# Source0-md5:	bf93409054c46c6306f9991989214e8d
 Patch0:		install-lwgeom.patch
 URL:		http://postgis.refractions.net/
-%{?with_raster:BuildRequires:	gdal-devel >= 1.8.0}
+BuildRequires:	bison
 BuildRequires:	clang
-BuildRequires:	geos-devel >= 3.5.0
+BuildRequires:	flex
+%{?with_raster:BuildRequires:	gdal-devel >= 2.0.0}
+BuildRequires:	geos-devel >= 3.6.0
 BuildRequires:	json-c-devel
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libxml2-devel >= 2.0
-BuildRequires:	pcre-devel
+BuildRequires:	pcre2-8-devel
 BuildRequires:	perl-base
-BuildRequires:	postgresql-backend-devel >= 9.1
-BuildRequires:	postgresql-devel >= 9.1
-BuildRequires:	proj-devel >= 4.6.0
+BuildRequires:	pkgconfig
+BuildRequires:	postgresql-backend-devel >= 11
+BuildRequires:	postgresql-devel >= 11
+BuildRequires:	proj-devel >= 4.9.0
+BuildRequires:	protobuf-c-devel >= 1.1.0
 %if %{with doc}
 BuildRequires:	ImageMagick
 BuildRequires:	docbook-style-xsl
@@ -40,7 +44,7 @@ BuildRequires:	libxslt-progs
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	pkgconfig
 %endif
-%{?with_raster:Requires:	gdal >= 1.8.0}
+%{?with_raster:Requires:	gdal >= 2.0.0}
 Requires:	liblwgeom = %{version}-%{release}
 Requires:	postgresql >= %{pg_version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -79,8 +83,8 @@ Graficzny interfejs użytkownika importujący dane dla PostGIS-a.
 Summary:	lwgeom library (a part of PostGIS project)
 Summary(pl.UTF-8):	Biblioteka lwgeom (część projektu PostGIS)
 Group:		Libraries
-Requires:	geos >= 3.5.0
-Requires:	proj >= 4.6.0
+Requires:	geos >= 3.6.0
+Requires:	proj >= 4.9.0
 Conflicts:	postgis < 2.0.0-2
 
 %description -n liblwgeom
@@ -93,9 +97,9 @@ Biblioteka lwgeom (część projektu PostGIS).
 Summary:	Header file for lwgeom library
 Summary(pl.UTF-8):	Plik nagłówkowy biblioteki lwgeom
 Group:		Development/Libraries
-Requires:	geos-devel >= 3.5.0
+Requires:	geos-devel >= 3.6.0
 Requires:	liblwgeom = %{version}-%{release}
-Requires:	proj-devel >= 4.6.0
+Requires:	proj-devel >= 4.9.0
 
 %description -n liblwgeom-devel
 Header file for lwgeom library.
@@ -116,7 +120,7 @@ Static lwgeom library.
 Statyczna biblioteka lwgeom.
 
 %prep
-%setup -q -n %{name}-%{version}%{subver}
+%setup -q
 %patch0 -p1
 
 %build
@@ -152,32 +156,34 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CREDITS LICENSE.TXT NEWS README.postgis TODO %{?with_doc:doc/html}
 %attr(755,root,root) %{_bindir}/pgsql2shp
+%attr(755,root,root) %{_bindir}/pgtopo_export
+%attr(755,root,root) %{_bindir}/pgtopo_import
 %attr(755,root,root) %{_bindir}/shp2pgsql
+%attr(755,root,root) %{_libdir}/postgresql/address_standardizer-3.so
 %attr(755,root,root) %{_libdir}/postgresql/postgis-3.so
-%attr(755,root,root) %{_libdir}/postgresql/postgis_raster-3.so
 %attr(755,root,root) %{_libdir}/postgresql/postgis_topology-3.so
-%{_datadir}/postgresql/contrib/postgis-3.0
-%if %{with raster}
-%attr(755,root,root) %{_bindir}/raster2pgsql
-%{_datadir}/postgresql/extension/postgis*.control
-%{_datadir}/postgresql/extension/postgis*.sql
-%endif
-%{_libdir}/postgresql/address_standardizer-3.so
-%{_datadir}/postgresql/extension/address_standardizer*.sql
-%{_datadir}/postgresql/extension/address_standardizer*.control
 %dir %{_libdir}/postgresql/bitcode
 %{_libdir}/postgresql/bitcode/address_standardizer-3.index.bc
-%dir %{_libdir}/postgresql/bitcode/address_standardizer-3/
+%dir %{_libdir}/postgresql/bitcode/address_standardizer-3
 %{_libdir}/postgresql/bitcode/address_standardizer-3/*.bc
 %{_libdir}/postgresql/bitcode/postgis-3.index.bc
 %dir %{_libdir}/postgresql/bitcode/postgis-3
 %{_libdir}/postgresql/bitcode/postgis-3/*.bc
-%{_libdir}/postgresql/bitcode/postgis_raster-3.index.bc
-%dir %{_libdir}/postgresql/bitcode/postgis_raster-3
-%{_libdir}/postgresql/bitcode/postgis_raster-3/*.bc
 %{_libdir}/postgresql/bitcode/postgis_topology-3.index.bc
 %dir %{_libdir}/postgresql/bitcode/postgis_topology-3
 %{_libdir}/postgresql/bitcode/postgis_topology-3/*.bc
+%{_datadir}/postgresql/contrib/postgis-3.3
+%{_datadir}/postgresql/extension/address_standardizer*.sql
+%{_datadir}/postgresql/extension/address_standardizer*.control
+%{_datadir}/postgresql/extension/postgis*.control
+%{_datadir}/postgresql/extension/postgis*.sql
+%if %{with raster}
+%attr(755,root,root) %{_bindir}/raster2pgsql
+%attr(755,root,root) %{_libdir}/postgresql/postgis_raster-3.so
+%{_libdir}/postgresql/bitcode/postgis_raster-3.index.bc
+%dir %{_libdir}/postgresql/bitcode/postgis_raster-3
+%{_libdir}/postgresql/bitcode/postgis_raster-3/*.bc
+%endif
 
 %if %{with gui}
 %files gui
@@ -189,8 +195,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n liblwgeom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblwgeom-3.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblwgeom-3.0.so.0
+%attr(755,root,root) %{_libdir}/liblwgeom-3.3.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblwgeom-3.3.so.0
 
 %files -n liblwgeom-devel
 %defattr(644,root,root,755)
