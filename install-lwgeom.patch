@@ -1,6 +1,6 @@
 --- postgis-3.3.2/liblwgeom/Makefile.in.orig	2022-11-13 08:09:23.000000000 +0100
 +++ postgis-3.3.2/liblwgeom/Makefile.in	2023-01-23 21:14:55.935112780 +0100
-@@ -171,7 +171,15 @@ SA_HEADERS = \
+@@ -171,7 +171,14 @@ SA_HEADERS = \
  
  all: liblwgeom.la
  
@@ -12,7 +12,6 @@
 +	$(LIBTOOL) --mode=install $(INSTALL) liblwgeom.la "$(DESTDIR)$(libdir)/liblwgeom.la"
 +	$(INSTALL) -d "$(DESTDIR)$(includedir)"
 +	$(INSTALL) -m 0644 liblwgeom.h "$(DESTDIR)$(includedir)/liblwgeom.h"
-+	$(INSTALL) -m 0644 liblwgeom_topo.h "$(DESTDIR)$(includedir)/liblwgeom_topo.h"
 +	$(INSTALL) -m 0644 lwinline.h "$(DESTDIR)$(includedir)/lwinline.h"
  
  uninstall:

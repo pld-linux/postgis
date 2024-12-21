@@ -10,12 +10,12 @@
 Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
-Version:	3.3.2
+Version:	3.5.0
 Release:	1
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}.tar.gz
-# Source0-md5:	bf93409054c46c6306f9991989214e8d
+# Source0-md5:	330fdb385e558c7cbd855b267c26ba11
 Patch0:		install-lwgeom.patch
 URL:		http://postgis.refractions.net/
 BuildRequires:	bison
@@ -121,10 +121,12 @@ Statyczna biblioteka lwgeom.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P 0 -p1
+
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+perl(\s|$),#!%{__perl}\1,' \
+      utils/postgis_restore.pl.in
 
 %build
-export CFLAGS="%{rpmcflags} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
 %configure \
 	%{?with_gui:--with-gui} \
 	%{!?with_raster:--without-raster}
@@ -141,8 +143,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__sed} -i -e 's/#include.*postgis_config.*/#include "postgis_config.h"/' $RPM_BUILD_ROOT%{_includedir}/liblwgeom.h
 
 # Fix icons and desktop file locations
-%{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/icons
-%{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/applications
+#%{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/icons
+#%{__mv} $RPM_BUILD_ROOT%{_datadir}/{postgresql,}/applications
 
 %{__rm} -r $RPM_BUILD_ROOT%{_iconsdir}/hicolor/40x40
 
@@ -158,21 +160,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pgsql2shp
 %attr(755,root,root) %{_bindir}/pgtopo_export
 %attr(755,root,root) %{_bindir}/pgtopo_import
+%attr(755,root,root) %{_bindir}/postgis
+%attr(755,root,root) %{_bindir}/postgis_restore
 %attr(755,root,root) %{_bindir}/shp2pgsql
 %attr(755,root,root) %{_libdir}/postgresql/address_standardizer-3.so
 %attr(755,root,root) %{_libdir}/postgresql/postgis-3.so
 %attr(755,root,root) %{_libdir}/postgresql/postgis_topology-3.so
-%dir %{_libdir}/postgresql/bitcode
-%{_libdir}/postgresql/bitcode/address_standardizer-3.index.bc
-%dir %{_libdir}/postgresql/bitcode/address_standardizer-3
-%{_libdir}/postgresql/bitcode/address_standardizer-3/*.bc
-%{_libdir}/postgresql/bitcode/postgis-3.index.bc
-%dir %{_libdir}/postgresql/bitcode/postgis-3
-%{_libdir}/postgresql/bitcode/postgis-3/*.bc
-%{_libdir}/postgresql/bitcode/postgis_topology-3.index.bc
-%dir %{_libdir}/postgresql/bitcode/postgis_topology-3
-%{_libdir}/postgresql/bitcode/postgis_topology-3/*.bc
-%{_datadir}/postgresql/contrib/postgis-3.3
+%{_datadir}/postgresql/contrib/postgis-3.5
 %{_datadir}/postgresql/extension/address_standardizer*.sql
 %{_datadir}/postgresql/extension/address_standardizer*.control
 %{_datadir}/postgresql/extension/postgis*.control
@@ -180,10 +174,13 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with raster}
 %attr(755,root,root) %{_bindir}/raster2pgsql
 %attr(755,root,root) %{_libdir}/postgresql/postgis_raster-3.so
-%{_libdir}/postgresql/bitcode/postgis_raster-3.index.bc
-%dir %{_libdir}/postgresql/bitcode/postgis_raster-3
-%{_libdir}/postgresql/bitcode/postgis_raster-3/*.bc
 %endif
+%{_mandir}/man1/pgsql2shp.1*
+%{_mandir}/man1/pgtopo_export.1*
+%{_mandir}/man1/pgtopo_import.1*
+%{_mandir}/man1/postgis.1*
+%{_mandir}/man1/postgis_restore.1*
+%{_mandir}/man1/shp2pgsql.1*
 
 %if %{with gui}
 %files gui
@@ -195,15 +192,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n liblwgeom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblwgeom-3.3.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblwgeom-3.3.so.0
+%attr(755,root,root) %{_libdir}/liblwgeom-3.5.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblwgeom-3.5.so.0
 
 %files -n liblwgeom-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/liblwgeom.so
 %{_libdir}/liblwgeom.la
 %{_includedir}/liblwgeom.h
-%{_includedir}/liblwgeom_topo.h
 %{_includedir}/lwinline.h
 %{_includedir}/postgis_config.h
 
