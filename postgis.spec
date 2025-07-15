@@ -11,7 +11,7 @@ Summary:	Geographic Information Systems Extensions to PostgreSQL
 Summary(pl.UTF-8):	Rozszerzenie do PostgreSQL wspomagające Geograficzne Systemy Informacyjne
 Name:		postgis
 Version:	3.5.0
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Applications/Databases
 Source0:	https://download.osgeo.org/postgis/source/%{name}-%{version}.tar.gz
